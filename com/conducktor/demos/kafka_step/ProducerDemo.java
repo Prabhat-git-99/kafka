@@ -1,7 +1,13 @@
 package com.conducktor.demos.kafka_step;
 
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 public class ProducerDemo {
 	
@@ -19,15 +25,31 @@ public class ProducerDemo {
 		//****************************
 		
 		// Create Producer Properties
+		Properties properties = new Properties( );
+		properties.setProperty( ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092" );
+		// properties.setProperty( "bootstrap.servers", "127.0.0.1:9092" );
+		properties.setProperty( ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName( ) );
+		properties.setProperty( ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName( ) );
 		
 		
 		// Create the Producer
+		KafkaProducer< String, String > producer = new KafkaProducer< String, String >( properties );
 		
 		
-		// Send data
+		// Create a producer record
+		ProducerRecord< String, String > producerRecord = 
+				new ProducerRecord< String, String >( "demo_java", "hello world" );
 		
 		
-		// Flush & Close the Producer
+		// Send data -> It's an asynchronous opertation
+		producer.send( producerRecord );
+		
+		
+		// Flush & Close the Producer - Synchronous data
+		producer.flush( );
+		
+		producer.close( );
+		
 		
 	}
 
