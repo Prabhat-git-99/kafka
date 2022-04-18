@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -15,9 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ConsumerDemoWithShutdown {
+public class ConsumerDemoCooperative {
 
-	private static final Logger log = LoggerFactory.getLogger( ConsumerDemoWithShutdown.class.getSimpleName( ) ); 
+	private static final Logger log = LoggerFactory.getLogger( ConsumerDemoCooperative.class.getSimpleName( ) ); 
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -34,6 +35,7 @@ public class ConsumerDemoWithShutdown {
 		properties.setProperty( ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName( ) );
 		properties.setProperty( ConsumerConfig.GROUP_ID_CONFIG, groupId );
 		properties.setProperty( ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest" );
+		properties.setProperty( ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName( ) );
 		
 		// Create consumer
 		KafkaConsumer< String, String > consumer = new KafkaConsumer< String, String >( properties );
